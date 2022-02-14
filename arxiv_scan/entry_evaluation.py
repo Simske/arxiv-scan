@@ -1,16 +1,18 @@
 """Definition of class Entry and all evaluation related functions"""
 import re
 from datetime import datetime
+from typing import List, Optional
 
 
 class Entry(object):
     """This class represents one arxiv entry"""
 
     def __init__(self, id: str, title: str,
-                 authors: list, abstract: str, category: str = "",
-                 date_submitted: datetime = None,
-                 date_updated: datetime = None,
-                 number: int = None):
+                 authors: list, abstract: str,
+                 date_submitted: datetime,
+                 date_updated: datetime,
+                 category: str = "",
+                 number: int = None) -> None:
         self.id = id
         self.title = title
         self.authors = authors
@@ -19,9 +21,9 @@ class Entry(object):
         self.date_submitted = date_submitted
         self.date_updated = date_updated
 
-        self.title_marks = []
-        self.author_marks = [False] * len(self.authors)
-        self.rating = None
+        self.title_marks: List[int] = []
+        self.author_marks: List[bool] = [False] * len(self.authors)
+        self.rating: int = -1 # -1 if rating is not calculated
 
     def __repr__(self) -> str:
         return (
@@ -86,12 +88,15 @@ class Entry(object):
 
         return self.rating
 
-def evaluate_entries(entries: list, keyword_ratings: dict, author_ratings: dict, rate_abstract: bool=True) -> list:
+def evaluate_entries(entries: list, keyword_ratings: dict,
+                     author_ratings: dict, rate_abstract: bool=True) -> list:
     """Evaluate all entries in list"""
     for entry in entries:
         entry.evaluate(keyword_ratings, author_ratings, rate_abstract)
+    return entries
 
-def sort_entries(entries: list, rating_min: int, reverse: bool, length: int) -> list:
+def sort_entries(entries: list, rating_min: int, reverse: bool,
+                 length: Optional[int]=None) -> list:
     ''' Sort entries by rating
 
     Only entries with rating >= rating_min are listed, and the list is at
@@ -99,7 +104,7 @@ def sort_entries(entries: list, rating_min: int, reverse: bool, length: int) -> 
     (after cutting the list to length entries). Note that the default order
     is most relevant paper on top.
     '''
-    if length < 0:
+    if length is not None and length < 0:
         length = None
 
     # remove entries with low rating

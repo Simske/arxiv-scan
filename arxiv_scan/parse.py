@@ -1,17 +1,18 @@
 """Functions relating to parsing Arxiv.org"""
 from datetime import datetime, timedelta
+from typing import List
 
-import feedparser
+import feedparser  # type: ignore
 import pytz
 
 from .entry_evaluation import Entry
 
 
-def linebreak_fix(text: str):
+def linebreak_fix(text: str) -> str:
     """Replace linebreaks and indenting with single space"""
     return " ".join(line.strip() for line in text.split("\n"))
 
-def datetime_fromisoformat(datestr: str):
+def datetime_fromisoformat(datestr: str) -> datetime:
     """Convert iso formatted datetime string to datetime object
 
     This is only needed for compatibility, as datetime.fromisoformat()
@@ -37,7 +38,7 @@ def get_entries(
     cutoff_date: datetime,
     cross_lists: bool = True,
     resubmissions: bool = False,
-) -> list:
+) -> List[Entry]:
     """Get arXiv submissions from now back to cutoff_date
 
     Args:

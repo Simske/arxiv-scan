@@ -1,18 +1,18 @@
 import datetime
 import logging
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 
 from . import __version__
+from .categories import category_map
 from .config import (Config, configfile_default_location, file_editor,
                      find_configfile, load_config_legacy_format)
 from .entry_evaluation import evaluate_entries, sort_entries
 from .output import print_entries
 from .parse import get_entries, submission_window_start
-from .categories import category_map
 
 
-def parse_cli_arguments() -> tuple:
+def parse_cli_arguments() -> Namespace:
     """Definition and parsing of command line arguments"""
     parser = ArgumentParser()
     parser.add_argument("--config", metavar="/path/to/config",

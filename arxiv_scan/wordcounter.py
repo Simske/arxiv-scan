@@ -1,11 +1,11 @@
+import argparse
 import json
 import os.path
 from collections import Counter
-from re import findall
-import argparse
 from pathlib import Path
+from re import findall
 
-from .config import Config, find_configfile, configfile_default_location
+from .config import Config, configfile_default_location, find_configfile
 
 
 def _count_words(fname):
