@@ -2,6 +2,7 @@ import datetime
 import logging
 import sys
 from argparse import ArgumentParser, Namespace
+from pathlib import Path
 
 from . import __version__
 from .categories import category_map
@@ -47,7 +48,7 @@ def parse_cli_arguments() -> Namespace:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_cli_arguments()
 
     logging.basicConfig(level=getattr(logging, args.log.upper()))
@@ -69,7 +70,7 @@ def main():
             path = configfile_default_location(mkdir=True)
         else:
             path = args.config_convert
-        config = load_config_legacy_format("keywords.txt", "authors.txt")
+        config = load_config_legacy_format(Path("keywords.txt"), Path("authors.txt"))
         config.write(path)
         print("Convert legacy configuration to {}".format(path))
         sys.exit()

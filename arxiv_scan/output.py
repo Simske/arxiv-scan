@@ -3,8 +3,10 @@ from typing import List
 
 from termcolor import colored
 
+from .entry_evaluation import Entry
 
-def print_entries(entries: list) -> None:
+
+def print_entries(entries: List[Entry]) -> None:
     ''' Print all entries'''
     for i, entry in enumerate(entries):
         rating = colored('({:2d})'.format(entry.rating), 'green')

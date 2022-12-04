@@ -7,6 +7,7 @@ import sys
 from ast import literal_eval
 from configparser import ConfigParser
 from pathlib import Path
+from typing import Any, Dict
 
 
 class Config:
@@ -17,7 +18,7 @@ class Config:
     configparser only uses `str`
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._config = ConfigParser()
 
         self._config["keywords"] = {}
@@ -25,45 +26,45 @@ class Config:
         self._config["options"] = {
             "categories": "astro-ph.EP",
             "date": "new",
-            "length": -1,
-            "minimum_rating": 10,
-            "reverse_list": False,
-            "show_resubmissions": False,
-            "show_cross_lists": True,
+            "length": "-1",
+            "minimum_rating": "10",
+            "reverse_list": "False",
+            "show_resubmissions": "False",
+            "show_cross_lists": "True",
         }
 
     @property
-    def keywords(self) -> dict:
+    def keywords(self) -> Dict[str, int]:
         """Get keywords/rating as dict with type `dict[str,int]`"""
         return {
             keyword: int(rating) for keyword, rating in self._config["keywords"].items()
         }
 
-    def add_keyword(self, keyword: str, rating: int):
+    def add_keyword(self, keyword: str, rating: int) -> None:
         """Add keyword with rating to config"""
         self._config["keywords"][keyword] = str(rating)
 
     @property
-    def authors(self):
+    def authors(self) -> Dict[str, int]:
         """Get authors/rating as dict with type `dict[str,int]`"""
         return {
             author: int(rating) for author, rating in self._config["authors"].items()
         }
 
-    def add_author(self, author: str, rating: int):
+    def add_author(self, author: str, rating: int) -> None:
         """Add author with rating to config"""
         self._config["authors"][author] = str(rating)
 
-    def read(self, path: Path):
+    def read(self, path: Path) -> None:
         """Read path to config. Existing values will be overwritten"""
         self._config.read(path)
 
-    def write(self, path: Path, overwrite: bool = False):
+    def write(self, path: Path, overwrite: bool = False) -> None:
         """Write config to file. Will not overwrite existing files if `overwrite` is false"""
         with open(path, "w" if overwrite else "x") as f:
             self._config.write(f)
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> Any:
         """Get option value from config"""
         # use literal_eval to convert if its not a str
         try:
@@ -71,7 +72,7 @@ class Config:
         except (ValueError, SyntaxError):
             return self._config["options"][key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Any) -> None:
         """Set option if value is not None"""
         if value is not None:
             self._config["options"][key] = str(value)
@@ -130,7 +131,7 @@ def configfile_default_location(mkdir: bool=False, name: str="arxiv-scan") -> Pa
     return path
 
 
-def file_editor(path: Path):
+def file_editor(path: Path) -> None:
     """Open file in default text editor
 
     Opens in first editor set in environment variables $VISUAL or $EDITOR,

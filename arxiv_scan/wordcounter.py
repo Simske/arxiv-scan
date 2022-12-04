@@ -8,14 +8,14 @@ from re import findall
 from .config import Config, configfile_default_location, find_configfile
 
 
-def _count_words(fname):
+def _count_words(fname: Path) -> Counter[str]:
     with open(fname) as f:
         text = f.read()
     words = findall(r'\b\w{4,12}\b', text.lower())
     return Counter(words)
 
 
-def most_common_words_in_file(fname, n, verbose=False):
+def most_common_words_in_file(fname: Path, n: int, verbose: bool=False) -> Counter[str]:
     counts = _count_words(fname)
     if verbose:
         for word, count in [['WORD', 'COUNT']] + counts.most_common(n):
@@ -23,7 +23,7 @@ def most_common_words_in_file(fname, n, verbose=False):
     return counts
 
 
-def select_keywords(config: Config, counts):
+def select_keywords(config: Config, counts: Counter[str]) -> Config:
     """Let the user rate or reject keywords"""
     # sort list by decreasing number of occurrence
     counts = dict(sorted(counts.items(), key=lambda item: item[1], reverse=True))
@@ -56,7 +56,7 @@ def select_keywords(config: Config, counts):
     return config
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser("Extract keywords from arbitrary text files")
     parser.add_argument("-c", "--config", help="Config file to write keywords to")
     parser.add_argument("file", help="Text file to scan for keywords")

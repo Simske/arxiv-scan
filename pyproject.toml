@@ -7,3 +7,5 @@ write_to = "arxiv_scan/_version.py"
 
 [tool.mypy]
 files = "arxiv_scan"
+strict = true
+implicit_reexport = true

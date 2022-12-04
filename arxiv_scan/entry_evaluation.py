@@ -1,18 +1,18 @@
 """Definition of class Entry and all evaluation related functions"""
 import re
 from datetime import datetime
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 
 class Entry(object):
     """This class represents one arxiv entry"""
 
     def __init__(self, id: str, title: str,
-                 authors: list, abstract: str,
+                 authors: List[str], abstract: str,
                  date_submitted: datetime,
                  date_updated: datetime,
                  category: str = "",
-                 number: int = None) -> None:
+                 number: Optional[int] = None) -> None:
         self.id = id
         self.title = title
         self.authors = authors
@@ -52,7 +52,7 @@ class Entry(object):
         """Mark author (by given number in author list)"""
         self.author_marks[number] = True
 
-    def evaluate(self, keyword_ratings: dict, author_ratings: dict,
+    def evaluate(self, keyword_ratings: Dict[str, int], author_ratings: Dict[str, int],
                        rate_abstract: bool=True) -> int:
         """Evaluate entry
 
@@ -88,15 +88,15 @@ class Entry(object):
 
         return self.rating
 
-def evaluate_entries(entries: list, keyword_ratings: dict,
-                     author_ratings: dict, rate_abstract: bool=True) -> list:
+def evaluate_entries(entries: List[Entry], keyword_ratings: Dict[str, int],
+                     author_ratings: Dict[str, int], rate_abstract: bool=True) -> List[Entry]:
     """Evaluate all entries in list"""
     for entry in entries:
         entry.evaluate(keyword_ratings, author_ratings, rate_abstract)
     return entries
 
-def sort_entries(entries: list, rating_min: int, reverse: bool,
-                 length: Optional[int]=None) -> list:
+def sort_entries(entries: List[Entry], rating_min: int, reverse: bool,
+                 length: Optional[int]=None) -> List[Entry]:
     ''' Sort entries by rating
 
     Only entries with rating >= rating_min are listed, and the list is at

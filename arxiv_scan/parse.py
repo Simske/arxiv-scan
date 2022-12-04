@@ -1,6 +1,6 @@
 """Functions relating to parsing Arxiv.org"""
 from datetime import datetime, timedelta
-from typing import List
+from typing import Any, List
 
 import feedparser  # type: ignore
 import pytz
@@ -34,7 +34,7 @@ def atom2entry(entry: feedparser.util.FeedParserDict) -> Entry:
 
 
 def get_entries(
-    categories: list,
+    categories: List[str],
     cutoff_date: datetime,
     cross_lists: bool = True,
     resubmissions: bool = False,
@@ -90,7 +90,7 @@ def get_entries(
     return entries
 
 
-def submission_window_start(date: datetime, tz=pytz.timezone("US/Eastern")):
+def submission_window_start(date: datetime, tz: Any=pytz.timezone("US/Eastern")) -> datetime:
     """Find start of latest submission window of arxiv.org
 
     Submission window reference: https://arxiv.org/help/availability
